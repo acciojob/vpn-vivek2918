@@ -21,8 +21,36 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public User connect(int userId, String countryName) throws Exception{
-      User user = new User();
-      return user;
+      User user = userRepository2.findById(userId).get();
+      if(user.getConnected()==true){
+          throw new Exception("User Already Connected");
+      }
+      if(user.getOriginalCountry().getCountryName().name().equalsIgnoreCase(countryName)){
+          return user;
+      }
+
+      for(ServiceProvider serviceProvider : user.getServiceProviderList()){
+          for(Country country : serviceProvider.getCountryList()){
+              if(country.getCountryName().name().equalsIgnoreCase(countryName)){
+                  user.setMaskedIp(country.getCountryName().toString()+"."+serviceProvider.getId() + "." + userId);
+                  user.setConnected(Boolean.TRUE);
+
+                  Connection connection = new Connection();
+                  connection.setUser(user);
+                  connection.setServiceProvider(serviceProvider);
+
+                  user.getConnectionList().add(connection);
+                  serviceProvider.getConnectionList().add(connection);
+
+                  userRepository2.save(user);
+                  serviceProviderRepository2.save(serviceProvider);
+
+                  return user;
+              }
+          }
+      }
+
+        throw new Exception("Unable to connect");
     }
     @Override
     public User disconnect(int userId) throws Exception {
@@ -38,7 +66,46 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
-        User user = new User();
-        return user;
+        User sender = userRepository2.findById(senderId).orElse(null);
+        User receiver = userRepository2.findById(receiverId).orElse(null);
+
+        if (sender == null || receiver == null) {
+            throw new NullPointerException();
+        }
+
+        if (receiver.getConnected()) {
+            if (receiver.getMaskedIp() == null) {
+                throw new Exception("Null Ip is Receive");
+            }
+
+            String maskedIp = receiver.getMaskedIp();
+            String countryCode = maskedIp.substring(0, 3);
+
+            if (!sender.getOriginalCountry().getCode().equals(countryCode)) {
+                String countryName = CountryName.valueOf(countryCode).name();
+                try {
+                    sender = connect(senderId, countryName);
+                    userRepository2.save(sender);
+                } catch (Exception e) {
+                    throw new CannotEstablishCommunicationException();
+                }
+            }
+        } else {
+            if (!sender.getOriginalCountry().equals(receiver.getOriginalCountry())) {
+                try {
+                    sender = connect(senderId, receiver.getOriginalCountry().getCountryName().name());
+                    userRepository2.save(sender);
+                } catch (Exception e) {
+                    throw new CannotEstablishCommunicationException();
+                }
+            }
+        }
+        return sender;
+    }
+
+    public static class CannotEstablishCommunicationException extends Exception {
+        public CannotEstablishCommunicationException() {
+            super("Cannot Establish Communication");
+        }
     }
 }
