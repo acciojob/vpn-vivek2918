@@ -26,7 +26,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Override
     public User disconnect(int userId) throws Exception {
          User user = userRepository2.findById(userId).get();
-         if(user.isConnected() != true){
+         if(user.getConnected() != true){
              throw new Exception("User Already Disconnected");
          }
 

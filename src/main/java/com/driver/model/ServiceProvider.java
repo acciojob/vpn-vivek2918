@@ -25,7 +25,7 @@ public class ServiceProvider {
     private List<Country> countryList= new ArrayList<>();
 
     @ManyToMany(mappedBy = "serviceProviderList",cascade = CascadeType.ALL)
-    private List<User> userList = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     public ServiceProvider() {
     }
@@ -36,7 +36,7 @@ public class ServiceProvider {
         this.admin = admin;
         this.connectionList = connectionList;
         this.countryList = countryList;
-        this.userList = userList;
+        this.users = users;
     }
 
     public int getId() {
@@ -79,11 +79,11 @@ public class ServiceProvider {
         this.countryList = countryList;
     }
 
-    public List<User> getUserList() {
-        return userList;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
