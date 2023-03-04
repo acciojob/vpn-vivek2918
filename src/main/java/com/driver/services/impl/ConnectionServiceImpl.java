@@ -19,10 +19,11 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Autowired
     ConnectionRepository connectionRepository2;
 
-//    @Override
-//    public User connect(int userId, String countryName) throws Exception{
-//
-//    }
+    @Override
+    public User connect(int userId, String countryName) throws Exception{
+      User user = new User();
+      return user;
+    }
     @Override
     public User disconnect(int userId) throws Exception {
          User user = userRepository2.findById(userId).get();
@@ -30,12 +31,14 @@ public class ConnectionServiceImpl implements ConnectionService {
              throw new Exception("User Already Disconnected");
          }
 
+
          user.setConnected(false);
          userRepository2.save(user);
          return user;
     }
-//    @Override
-//    public User communicate(int senderId, int receiverId) throws Exception {
-//
-//    }
+    @Override
+    public User communicate(int senderId, int receiverId) throws Exception {
+        User user = new User();
+        return user;
+    }
 }

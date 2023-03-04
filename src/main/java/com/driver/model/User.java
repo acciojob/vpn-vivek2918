@@ -104,7 +104,7 @@ public class User {
         this.connectionList = connectionList;
     }
 
-    public Country getoriginalCountry() {
+    public Country getOriginalCountry() {
         return originalCountry;
     }
 
