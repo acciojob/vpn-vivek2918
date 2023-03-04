@@ -27,25 +27,25 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         Country country = new Country();
 
-        if(countryName.equals("IND") || countryName.equals("USA") || countryName.equals("AUS") || countryName.equals("CHI") || countryName.equals("JPN")) {
+        if(countryName.equalsIgnoreCase("IND") || countryName.equalsIgnoreCase("USA") || countryName.equalsIgnoreCase("AUS") || countryName.equalsIgnoreCase("CHI") || countryName.equalsIgnoreCase("JPN")) {
 
             user.setUsername(username);
             user.setPassword(password);
 
 
-            if (countryName.equals("IND")) {
+            if (countryName.equalsIgnoreCase("IND")) {
                 country.setCountryName(CountryName.IND);
                 country.setCode(CountryName.IND.toCode());
-            } else if (countryName.equals("USA")) {
+            } else if (countryName.equalsIgnoreCase("USA")) {
                 country.setCountryName(CountryName.USA);
                 country.setCode(CountryName.USA.toCode());
-            } else if (countryName.equals("AUS")) {
+            } else if (countryName.equalsIgnoreCase("AUS")) {
                 country.setCode(CountryName.AUS.toCode());
                 country.setCountryName(CountryName.AUS);
-            } else if (countryName.equals("CHI")) {
+            } else if (countryName.equalsIgnoreCase("CHI")) {
                 country.setCode(CountryName.CHI.toCode());
                 country.setCountryName(CountryName.CHI);
-            } else if (countryName.equals("JPN")) {
+            } else if (countryName.equalsIgnoreCase("JPN")) {
                 country.setCode(CountryName.JPN.toCode());
                 country.setCountryName(CountryName.JPN);
             }
