@@ -54,39 +54,37 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
-        if(countryName.equalsIgnoreCase("IND") || countryName.equalsIgnoreCase("USA") || countryName.equalsIgnoreCase("AUS") || countryName.equalsIgnoreCase("CHI") || countryName.equalsIgnoreCase("JPN")){
+        for(CountryName countryName1 : CountryName.values()) {
+            if(countryName1.name().equalsIgnoreCase(countryName)) {
+                ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).orElse(null);
 
-        Country country = new Country();
-        ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).get();
+                if(serviceProvider == null){
+                    throw new NullPointerException();
+                }
 
-        if(countryName.equalsIgnoreCase("IND")){
-            country.setCountryName(CountryName.IND);
-            country.setCode(CountryName.IND.toCode());
-        }
-        else if(countryName.equalsIgnoreCase("USA")){
-            country.setCountryName(CountryName.USA);
-            country.setCode(CountryName.USA.toCode());
-        }
-        else if(countryName.equalsIgnoreCase("AUS")){
-            country.setCode(CountryName.AUS.toCode());
-            country.setCountryName(CountryName.AUS);
-        }
-        else if(countryName.equalsIgnoreCase("CHI")){
-            country.setCode(CountryName.CHI.toCode());
-            country.setCountryName(CountryName.CHI);
-        }
-        else if(countryName.equalsIgnoreCase("JPN")){
-            country.setCode(CountryName.JPN.toCode());
-            country.setCountryName(CountryName.JPN);
+                Country country = new Country();
+                country.setCountryName(countryName1);
+                country.setCode(countryName1.toCode());
+                country.setUser(null);
+                country.setServiceProvider(serviceProvider);
+
+                serviceProvider.getCountryList().add(country);
+
+                serviceProviderRepository1.save(serviceProvider);
+
+                return serviceProvider;
+            }
         }
 
-          country.setServiceProvider(serviceProvider);
-          serviceProvider.getCountryList().add(country);
-          serviceProviderRepository1.save(serviceProvider);
-          return serviceProvider;
+        throw new CountryNotFoundException("Country not found");
+    }
+    public static class CountryNotFoundException extends Exception {
+        public CountryNotFoundException(String errorMessage) {
+            super(errorMessage);
         }
-        else{
-            throw new Exception("Country Is Not Found");
+
+        public CountryNotFoundException() {
+
         }
     }
 }
