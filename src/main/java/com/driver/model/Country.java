@@ -3,13 +3,14 @@ package com.driver.model;// Note: Do not write @Enumerated annotation above Coun
 import javax.persistence.*;
 
 @Entity
-@Table(name = "country")
+@Table(name = "countries")
 public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Enumerated(EnumType.STRING)
     private CountryName countryName;
 
     private String code;
@@ -19,7 +20,6 @@ public class Country {
     private ServiceProvider serviceProvider;
 
     @OneToOne
-    @JoinColumn
     private User user;
 
     public Country() {
